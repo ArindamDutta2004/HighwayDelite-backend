@@ -173,7 +173,7 @@ router.post('/verify-otp', async (req, res) => {
     await user.save();
 
     const token = jwt.sign(
-      { userId: user._id.toString(), email: user.email },
+      { userId: user._id, email: user.email },
       requireJwtSecret(),
       { expiresIn: '1h' }
     );
@@ -226,7 +226,7 @@ router.post('/google', async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user._id.toString(), email: user.email },
+      { userId: user._id, email: user.email },
       requireJwtSecret(),
       { expiresIn: '1h' }
     );

@@ -1,11 +1,13 @@
 {
   "name": "notes-backend",
   "version": "1.0.0",
+  "type": "module", 
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch server.ts",
     "build": "tsc",
-    "start": "node server.ts"
+    "start": "node dist/server.js",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
