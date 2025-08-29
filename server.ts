@@ -2,7 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import authRoutes from './routes/auth.js'; // adjust path if needed
+import authRoutes from './routes/auth.js';
 
 dotenv.config();
 
@@ -10,24 +10,32 @@ const app = express();
 app.use(express.json());
 
 // ---------------- CORS Setup ----------------
-const allowedOrigins =
-  process.env.NODE_ENV === 'production'
-    ? ['https://highway-delite-mu.vercel.app']
-    : ['http://localhost:5173'];
+const allowedOrigins = [
+  'http://localhost:5173',                  // local dev
+  'https://highway-delite-ten.vercel.app'  // deployed frontend
+];
 
 app.use(
   cors({
     origin: (origin, callback) => {
+      // allow requests with no origin (like Postman or curl)
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(new Error(`CORS error: ${origin} not allowed`));
       }
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true, // if using cookies/auth headers
+    credentials: true,
   })
 );
+
+// Optional: handle preflight requests explicitly
+app.options('*', cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
+}));
 
 // ---------------- Routes ----------------
 app.use('/api/auth', authRoutes);
